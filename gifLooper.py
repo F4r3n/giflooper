@@ -19,7 +19,7 @@ path =""
 def mse(imageA, imageB):
 
     err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
-	err /= float(imageA.shape[0] * imageA.shape[1])
+    err /= float(imageA.shape[0] * imageA.shape[1])
         
     return err
 
@@ -29,7 +29,7 @@ def mean(image):
 def prepareData():
 
     for i in range(0, len(files)):
-    	images.append(cv2.imread(path + "/" + files[i]))
+        images.append(cv2.imread(path + "/" + files[i]))
                 
         
 
@@ -38,17 +38,17 @@ def best(start, originalName):
     minmse = 1000000
     mseFinal = 0
     original = images[start]
-  	for j in range(start+1, len(files)):
+    for j in range(start+1, len(files)):
         comp = images[j]
-          
+            
         mseValue = mse(original, comp)
         if minmse > mseValue:
-        	minmse = mseValue
+            minmse = mseValue
             mseFinal = minmse
             compName = path + "/" + files[j]
             diff = abs(start - j)
-  		if diff > 5:
-          	print((originalName ,compName , diff, int(mseFinal)))
+        if diff > 5:
+            print((originalName ,compName , diff, int(mseFinal)))
             seq.append((originalName ,compName , diff, int(mseFinal)))
 
 def sequences():
@@ -66,11 +66,11 @@ def createThreads(numberThreads = multiprocessing.cpu_count()):
         t.start()
 
 def worker():
-	while True:
+    while True:
         item = queue.get()
         best(*item)
         queue.task_done()
-        
+
 def readFile(path):
     with open(path, "r") as f:
         myListofTuples = [tuple(line.split(',')) for line in inputFile.readlines()]
