@@ -15,12 +15,12 @@ seq = []
 images = []
 files = []
 path =""
-
+minErrorMSE = 50
 def mse(imageA, imageB):
 
     err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
     err /= float(imageA.shape[0] * imageA.shape[1])
-        
+
     return err
 
 def mean(image):
@@ -35,21 +35,18 @@ def prepareData():
 
 def best(start, originalName):
     compName = ""
-    minmse = 1000000
-    mseFinal = 0
     original = images[start]
-    for j in range(start+1, len(files)):
+    print(str(start) + " " + str(len(files)) + " " + str(100*start/(len(files))))
+    for j in range(start+30, len(files)):
         comp = images[j]
             
         mseValue = mse(original, comp)
-        if minmse > mseValue:
-            minmse = mseValue
-            mseFinal = minmse
-            compName = path + "/" + files[j]
-            diff = abs(start - j)
-        if diff > 5:
-            print((originalName ,compName , diff, int(mseFinal)))
-            seq.append((originalName ,compName , diff, int(mseFinal)))
+        #print(mseValue)
+        compName = path + "/" + files[j]
+        diff = abs(start - j)
+        if mseValue < minErrorMSE:
+            print((originalName ,compName , diff, float(mseValue)))
+            seq.append((originalName ,compName , diff, float(mseValue)))
 
 def sequences():
         
@@ -59,7 +56,7 @@ def sequences():
                 
     return seq
 
-def createThreads(numberThreads = multiprocessing.cpu_count()):
+def createThreads(numberThreads = multiprocessing.cpu_count() - 1):
     for i in range(numberThreads):
         t = threading.Thread(target=worker)
         t.daemon = True
